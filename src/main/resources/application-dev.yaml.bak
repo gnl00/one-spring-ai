@@ -1,0 +1,8 @@
+spring:
+  ai:
+    openai:
+      api-key: sk-xxx
+      base-url: https://api.openai.com
+#    chat:
+#      client:
+#        enabled: false
