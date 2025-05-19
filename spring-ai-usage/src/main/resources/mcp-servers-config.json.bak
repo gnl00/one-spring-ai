@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/Users/username/workspace/code/one-spring-ai",
+        "/Users/username/Desktop"
+      ],
+      "env": {
+      }
+    }
+  }
+}

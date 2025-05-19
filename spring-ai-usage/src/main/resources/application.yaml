@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: mcpstdioclient
 # Set belows to your application-dev.yaml profile
 #  ai:
 #    openai:
