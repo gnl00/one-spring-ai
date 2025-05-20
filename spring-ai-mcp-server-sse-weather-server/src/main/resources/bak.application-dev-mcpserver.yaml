@@ -1,0 +1,13 @@
+server:
+  port: 8080
+spring:
+  ai:
+    openai:
+      api-key: <sk-xxx>
+      base-url: <https://api.com>
+    mcp:
+      server:
+        name: sse-mcp-weather-server
+        version: 0.0.1
+        type: async
+        sse-message-endpoint: /mcp/message

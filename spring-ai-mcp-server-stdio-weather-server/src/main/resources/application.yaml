@@ -1,11 +1,3 @@
 spring:
   profiles:
     active: dev-mcpserver
-# Set belows to your application-dev.yaml profile
-#  ai:
-#    openai:
-#      api-key: ${OPENAI_API_KEY}
-#      base-url: ${OPENAI_BASE_URL}
-#    chat:
-#      client:
-#        enabled: false

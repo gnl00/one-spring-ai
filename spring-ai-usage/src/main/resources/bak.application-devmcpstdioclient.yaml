@@ -1,9 +1,8 @@
-
 spring:
   ai:
     openai:
-      api-key:
-      base-url:
+      api-key: <api-key>
+      base-url: <https://api.com>
     mcp:
       client:
         enabled: true
@@ -15,9 +14,6 @@ spring:
           enabled: false
         stdio:
           servers-configuration: classpath:mcp-servers-config.json
-#    chat:
-#      client:
-#        enabled: false
 
 logging:
   level:

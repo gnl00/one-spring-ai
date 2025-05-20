@@ -1,0 +1,24 @@
+server:
+  port: 7070
+spring:
+  ai:
+    openai:
+      api-key: <api-key>
+      base-url: <https://api.com>
+    mcp:
+      client:
+        name: spring-ai-mcp-client
+        version: 1.0.0
+        request-timeout: 30s
+        toolcallback:
+          enabled: true
+        sse:
+          connections:
+            server1: http://localhost:8080
+
+logging:
+  level:
+    io:
+      modelcontextprotocol:
+        client: warn
+        spec: warn

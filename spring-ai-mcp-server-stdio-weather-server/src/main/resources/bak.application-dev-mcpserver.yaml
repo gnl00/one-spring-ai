@@ -23,7 +23,3 @@ spring:
         name: stdio-mcp-server
         stdio: true
         version: 0.0.1
-
-#    chat:
-#      client:
-#        enabled: false

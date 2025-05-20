@@ -1,20 +1,14 @@
 package one.demo.mcp.client.weather.sse;
 
-import io.modelcontextprotocol.client.McpClient;
-import io.modelcontextprotocol.client.McpSyncClient;
-import io.modelcontextprotocol.client.transport.ServerParameters;
-import io.modelcontextprotocol.client.transport.StdioClientTransport;
-import io.modelcontextprotocol.client.transport.WebFluxSseClientTransport;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.DefaultChatClient;
-import org.springframework.ai.mcp.SyncMcpToolCallbackProvider;
+import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 
-import java.time.Duration;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -25,11 +19,10 @@ public class WeatherSSEClient {
     }
 
     @Bean
-    CommandLineRunner runner(ChatClient.Builder chatClientBuilder, ConfigurableApplicationContext context) {
+    CommandLineRunner runner(ChatClient.Builder chatClientBuilder, ToolCallbackProvider tools, ConfigurableApplicationContext context) {
         return args -> {
             DefaultChatClient chatClient = (DefaultChatClient) chatClientBuilder
-                    // .defaultOptions(ChatOptions.builder().model("claude-3-7-sonnet-latest").build())
-                    // .defaultToolCallbacks(new SyncMcpToolCallbackProvider(mcpClient))
+                    .defaultToolCallbacks(tools)
                     .build();
             Scanner scanner = new Scanner(System.in);
             while (true) {
