@@ -3,3 +3,13 @@ spring:
     openai:
       api-key: sk-xxx
       base-url: https://api.openai.com
+
+logging:
+  level:
+    io:
+      modelcontextprotocol:
+        client: warn
+        spec: warn
+    org:
+      springframework:
+        ai: debug

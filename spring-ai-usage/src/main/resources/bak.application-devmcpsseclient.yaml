@@ -14,7 +14,10 @@ spring:
           enabled: true
         sse:
           connections:
-            server1: http://localhost:8080
+            server1:
+              url: http://localhost:8080
+            server2:
+              url: http://env-cvpjbjem1hkjat42sk4g-ap-southeast-1.alicloudapi.com/mcp-quark
 
 logging:
   level:

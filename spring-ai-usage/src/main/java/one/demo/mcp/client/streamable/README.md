@@ -1,0 +1,1 @@
+> MCP Java SDK not implement Streamable HTTP yet -- 20/5/2025
