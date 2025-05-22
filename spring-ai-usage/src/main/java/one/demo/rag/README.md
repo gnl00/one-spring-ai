@@ -80,13 +80,20 @@ vectorStore.add(List.of(
 数据表结构如下
 
 ```sql
-CREATE TABLE "public"."vector_store" (
-  "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
-  "content" text COLLATE "pg_catalog"."default",
-  "metadata" json,
-  "embedding" "public"."vector",
-  CONSTRAINT "vector_store_pkey" PRIMARY KEY ("id")
+CREATE EXTENSION IF NOT EXISTS vector;
+CREATE EXTENSION IF NOT EXISTS hstore;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+CREATE TABLE IF NOT EXISTS vector_store (
+    id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
+    content text,
+    metadata json,
+    -- 1536 is the default embedding dimension 注意这里的向量维度，需要和 spring.ai.vectorstore.pgvector.dimensions 这个配置一样
+    -- 如果没有设置 vector(1536)，仅使用 embedding vector 的话 pgvector 默认使用的向量维度是 768，同样的 spring.ai.vectorstore.pgvector.dimensions 也需要设置成 768
+    embedding vector(1536)
 );
+
+CREATE INDEX ON vector_store USING HNSW (embedding vector_cosine_ops);
 ```
 
 数据内容如下
@@ -188,6 +195,36 @@ the user that you can't answer the question.
 ```
 
 > 这里出现的 QuestionAnswerAdvisor/PromptChatMemoryAdvisor 中的 Advisor 可以理解成“增强器”或者“拦截器”
+
+## 文档检索
+
+1、需要文档解析依赖
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.ai</groupId>
+        <artifactId>spring-ai-tika-document-reader</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.ai</groupId>
+        <artifactId>spring-ai-markdown-document-reader</artifactId>
+    </dependency>
+</dependencies>
+```
+
+2、注意配置 `spring.ai.vectorstore.pgvector.dimensions`
+
+```sql
+CREATE TABLE IF NOT EXISTS vector_store (
+    id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
+    content text,
+    metadata json,
+    -- 1536 is the default embedding dimension 注意这里的向量维度，需要和 spring.ai.vectorstore.pgvector.dimensions 这个配置一样
+    -- 如果没有设置 vector(1536)，仅使用 embedding vector 的话 pgvector 默认使用的向量维度是 768，同样的 spring.ai.vectorstore.pgvector.dimensions 也需要设置成 768
+    embedding vector(1536)
+);
+```
 
 ## Advance功能
 
@@ -333,21 +370,21 @@ List<Document> documents = new ArrayList<>();
 // 现代简约风格客厅案例
 documents.add(new Document(
     "案例编号：LR-2023-001\n" +
-            "项目概述：180平米大平层现代简约风格客厅改造\n" +
-            "设计要点：\n" +
-            "1. 采用5.2米挑高的落地窗，最大化自然采光\n" +
-            "2. 主色调：云雾白(哑光，NCS S0500-N)配合莫兰迪灰\n" +
-            "3. 家具选择：意大利B&B品牌真皮沙发，北欧白橡木茶几\n" +
-            "4. 照明设计：嵌入式筒灯搭配意大利Flos吊灯\n" +
-            "5. 软装配饰：进口黑胡桃木电视墙，几何图案地毯\n" +
-            "空间效果：通透大气，适合商务接待和家庭日常起居",
+        "项目概述：180平米大平层现代简约风格客厅改造\n" +
+        "设计要点：\n" +
+        "1. 采用5.2米挑高的落地窗，最大化自然采光\n" +
+        "2. 主色调：云雾白(哑光，NCS S0500-N)配合莫兰迪灰\n" +
+        "3. 家具选择：意大利B&B品牌真皮沙发，北欧白橡木茶几\n" +
+        "4. 照明设计：嵌入式筒灯搭配意大利Flos吊灯\n" +
+        "5. 软装配饰：进口黑胡桃木电视墙，几何图案地毯\n" +
+        "空间效果：通透大气，适合商务接待和家庭日常起居",
     Map.of(
-            "type", "interior",    // 文档类型
-            "year", "2023",        // 年份
-            "month", "06",         // 月份
-            "location", "indoor",   // 位置类型
-            "style", "modern",      // 装修风格
-            "room", "living_room"   // 房间类型
+        "type", "interior",    // 文档类型
+        "year", "2023",        // 年份
+        "month", "06",         // 月份
+        "location", "indoor",   // 位置类型
+        "style", "modern",      // 装修风格
+        "room", "living_room"   // 房间类型
 )));
 ```
 
